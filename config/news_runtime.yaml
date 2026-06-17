@@ -1,0 +1,69 @@
+runtime:
+  timezone: Asia/Shanghai
+  dataset_id: wechat_topic_classified_v1
+  output_parquet: data/news/events_classified.parquet
+  output_csv: data/news/events_classified.csv
+  reviewed_output_parquet: data/news/reviewed_all.parquet
+  reviewed_output_csv: data/news/reviewed_all.csv
+  raw_dir: data/news/raw
+  log_dir: data/news/logs
+  health_path: data/news/logs/source_health.json
+  preserve_raw_payload: true
+  max_consecutive_failures: 5
+  auto_disable_sources: false
+  fetch_article_content: true
+  fetch_article_content_for_llm: true
+  llm_article_content_max_chars: 0
+  llm_max_images_per_event: 0
+  llm_media_cache_dir: data/news/cache/llm_media
+  article_html_cache_dir: data/news/cache/wechat_html
+  article_fetch_use_mp_cookies: true
+  article_fetch_playwright_fallback: false
+  article_fetch_timeout_seconds: 45
+  article_fetch_max_retries: 3
+  article_fetch_rate_limit_seconds: 3.0
+
+timeliness:
+  1: 4
+  2: 24
+  3: 24
+  4: 48
+
+llm:
+  enabled: true
+  provider: closeai
+  model: deepseek-v4-pro
+  vision_model: deepseek-v4-pro
+  vision_enabled: false
+  vision_batch_size: 4
+  vision_images_first: true
+  vision_disable_thinking: true
+  # 通过环境变量 CLOSEAI_API_BASE 或 OPENAI_BASE_URL 配置 API 地址
+  api_base: ""
+  batch_size: 4
+  concurrency: 1
+  summary_concurrency: 32
+  request_timeout_seconds: 600
+
+collection_profiles:
+  daily_brief:
+    lookback_hours: 24
+    history_hours: 48
+    overlap_hours: 1
+    max_incremental_hours: 24
+    source_ids: [wechat_kouzhaoge, wechat_hunshui, wechat_diaoyan_jiyao]
+    llm_batch_size: 4
+
+  weekly_review:
+    lookback_hours: 168
+    history_hours: 168
+    overlap_hours: 24
+    max_incremental_hours: 168
+    source_ids: [wechat_kouzhaoge, wechat_hunshui, wechat_diaoyan_jiyao]
+    llm_batch_size: 4
+
+schedule:
+  state_path: data/news/logs/scheduler_state.json
+  profile_intervals_seconds:
+    daily_brief: 86400
+    weekly_review: 604800

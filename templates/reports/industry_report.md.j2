@@ -1,0 +1,48 @@
+# {{ title }}
+
+> 主题：{{ industry }} | 报告期：{{ period_start }} ~ {{ period_end }}
+
+---
+
+## 1. 主题概览
+
+本期共收录 **{{ events | length }}** 条主题分类事件。
+
+---
+
+## 2. 本期核心事件
+
+{% for e in events %}
+- **{{ e.event_name or e.title }}**（{{ e.topic or e.industry }}，来源：{{ e.source_name }}，ID：{{ e.event_id }}）
+  - 分类理由：{{ e.agent_reasoning or '无' }}
+{% endfor %}
+
+---
+
+## 3. 按板块分组
+
+{% for topic, items in industry_sections.items() %}
+### {{ topic }}
+{% for e in items %}
+- {{ e.event_name or e.title }}（{{ e.source_name }}）
+{% else %}
+- 本期无事件
+{% endfor %}
+
+{% endfor %}
+
+---
+
+## 4. 后续调研问题
+
+{% for card in evidence_cards %}
+- {{ card.verification_questions[0] if card.verification_questions else '需补充第二来源' }}（事件 {{ card.event_id }}）
+{% endfor %}
+
+---
+
+## 附录：相关文章列表
+
+{% for a in articles %}
+- {{ a.title }}（{{ a.source_name }}，{{ a.published_at }}）{% if a.source_url %} [链接]({{ a.source_url }}){% endif %}
+{% endfor %}

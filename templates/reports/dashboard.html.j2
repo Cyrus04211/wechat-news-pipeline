@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公众号行业调研 Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
+    header { background: #1e3a8a; color: #fff; padding: 1.5rem 2rem; }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.5rem; }
+    header p { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .metric { background: #fff; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .metric .value { font-size: 1.8rem; font-weight: 700; color: #1d4ed8; }
+    .metric .label { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
+    section { background: #fff; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    h2 { margin: 0 0 1rem; font-size: 1.1rem; color: #1e40af; border-bottom: 2px solid #dbeafe; padding-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td { border: 1px solid #e2e8f0; padding: 0.5rem 0.65rem; text-align: left; }
+    th { background: #eff6ff; }
+    .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .topic-card { border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem; }
+    .topic-card h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .images { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .image-item img { max-width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; }
+    .image-item figcaption { font-size: 0.8rem; color: #64748b; margin-top: 0.35rem; }
+    .report-links a { display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; color: #2563eb; text-decoration: none; }
+    .report-links a:hover { text-decoration: underline; }
+    .badge { display: inline-block; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.75rem; background: #fef3c7; color: #92400e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>公众号行业调研 Dashboard</h1>
+    <p>{{ period_label }} | 生成于 {{ generated_at }}</p>
+  </header>
+  <main>
+    <div class="metrics">
+      <div class="metric"><div class="value">{{ metrics.total_events }}</div><div class="label">近期事件数</div></div>
+      <div class="metric"><div class="value">{{ metrics.classified_count }}</div><div class="label">已分类事件</div></div>
+      <div class="metric"><div class="value">{{ metrics.pending_review }}</div><div class="label">待复核</div></div>
+      <div class="metric"><div class="value">{{ metrics.image_count }}</div><div class="label">原文图片</div></div>
+    </div>
+
+    <section>
+      <h2>大话题事件计数</h2>
+      <div class="topic-grid">
+        {% for topic, count in topic_summary.items() %}
+        <div class="topic-card">
+          <h3>{{ topic }}</h3>
+          <div>{{ count }} 条事件</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <h2>已分类事件</h2>
+      <table>
+        <thead><tr><th>板块</th><th>事件</th><th>来源</th><th>分类理由</th><th>ID</th></tr></thead>
+        <tbody>
+        {% for e in classified_events %}
+        <tr>
+          <td>{{ e.topic }}</td>
+          <td>{% if e.source_url %}<a href="{{ e.source_url }}" target="_blank">{{ e.title }}</a>{% else %}{{ e.title }}{% endif %}</td>
+          <td>{{ e.source_name }}</td><td>{{ e.reasoning }}</td><td><code>{{ e.event_id }}</code></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">暂无已分类事件</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>待复核事件</h2>
+      <table>
+        <thead><tr><th>状态</th><th>板块</th><th>标题</th><th>事件 ID</th></tr></thead>
+        <tbody>
+        {% for p in pending_review %}
+        <tr>
+          <td><span class="badge">{{ p.status }}</span></td>
+          <td>{{ p.topic or p.industry }}</td>
+          <td>{{ p.title }}</td>
+          <td><code>{{ p.event_id }}</code></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4">暂无待复核事件</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>公众号来源贡献</h2>
+      <table>
+        <thead><tr><th>来源</th><th>事件数</th></tr></thead>
+        <tbody>
+        {% for s in source_counts %}
+        <tr><td>{{ s.source }}</td><td>{{ s.count }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">暂无数据</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>文章原文图片</h2>
+      <div class="images">
+        {% for img in article_images %}
+        <figure class="image-item">
+          <img src="{{ img.path }}" alt="文章图片">
+          <figcaption>文章 {{ img.article_id }}（{{ img.fetch_status }}）</figcaption>
+        </figure>
+        {% else %}
+        <p>暂无原文图片</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <h2>报告链接</h2>
+      <div class="report-links">
+        {% for link in report_links %}
+        <a href="{{ link.path }}">{{ link.date }} / {{ link.name }}</a>
+        {% else %}
+        <p>暂无已生成报告</p>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

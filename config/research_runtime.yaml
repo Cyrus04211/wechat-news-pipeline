@@ -1,0 +1,36 @@
+research:
+  enabled: true
+  output_dir: data/news/research
+  default_report_days: 1
+  default_weekly_days: 7
+  report_formats:
+    - markdown
+    - html
+  include_rejected_in_appendix: false
+  timezone: Asia/Shanghai
+  events_classified_path: data/news/events_classified.csv
+  reviewed_all_path: data/news/reviewed_all.csv
+  raw_dir: data/news/raw
+  fetch_article_images: false
+  article_images_dir: data/news/research/article_images
+
+reports:
+  daily_brief:
+    enabled: true
+    include_images: false
+    include_evidence_cards: true
+  weekly_review:
+    enabled: true
+    include_images: false
+  industry_report:
+    enabled: true
+  source_digest:
+    enabled: true
+
+article_images:
+  enabled: false
+
+image_insight_backfill:
+  enabled: false
+  vision_batch_size: 4
+  sync_event_tables: true

@@ -1,0 +1,41 @@
+# {{ title }}
+
+{% if events %}
+{% set e = events[0] %}
+{% set card = evidence_cards[0] if evidence_cards else {} %}
+
+## 事件一句话
+
+{{ e.event_name or e.title }}
+
+## 所属板块
+
+{{ e.topic or e.industry or '未分类' }}
+
+## 为什么重要
+
+{{ e.agent_reasoning or card.key_claims[0] if card and card.key_claims else '需结合主题和原文验证' }}
+
+## 证据质量
+
+- evidence_quality：{{ card.evidence_quality_score if card else 'N/A' }}
+
+## 需要验证什么
+
+{% for q in (card.verification_questions if card else []) %}
+- {{ q }}
+{% else %}
+- 是否有第二来源验证？
+- 是否能归入当前大话题下的核心事件？
+{% endfor %}
+
+## 相关原文
+
+- 来源：{{ e.source_name }}
+- 时间：{{ e.event_date }}
+- 链接：{% if e.source_url %}[原文]({{ e.source_url }}){% else %}无{% endif %}
+- 事件 ID：{{ e.event_id }}
+
+{% else %}
+未找到指定事件。
+{% endif %}

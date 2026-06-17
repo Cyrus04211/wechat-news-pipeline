@@ -1,0 +1,50 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code
+.claude/
+
+# Test files
+tests/
+
+# Scripts (local dev / ops, not project code)
+scripts/
+
+# Data & cache (all generated)
+data/news/raw/
+data/news/processed/
+data/news/cache/
+data/news/events_classified.*
+data/news/reviewed_all.*
+data/news/logs/
+data/news/research/
+data/wechat_mp_session.json
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.secret
+*.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Distribution
+dist/
+build/
+*.egg-info/

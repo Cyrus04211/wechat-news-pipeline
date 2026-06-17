@@ -1,0 +1,42 @@
+# {{ title }}
+
+> 生成时间：{{ generated_at }} | 报告期：{{ period_start }} ~ {{ period_end }}
+
+---
+
+## 1. 本周主线排序
+
+{% for theme in weekly_theme_cards %}
+### 板块 {{ loop.index }}：{{ theme.topic or theme.theme }}
+
+{{ theme.summary }}
+
+{% for e in theme.events %}
+#### 事件：{{ e.event_name }}
+
+- **来源**：{{ e.source }}
+- **原文链接**：{% if e.source_url %}[打开原文]({{ e.source_url }}){% else %}—{% endif %}
+
+{% endfor %}
+{% else %}
+- 本周无入选主线。
+{% endfor %}
+
+---
+
+## 2. 入选事件列表
+
+{% for topic, rows in weekly_event_appendix.items() %}
+### 板块：{{ topic }}
+
+{% for e in rows %}
+#### 事件：{{ e.event_name }}
+
+- **来源**：{{ e.source }}
+- **摘要**：{{ e.summary or '—' }}
+- **原文链接**：{% if e.source_url %}[打开原文]({{ e.source_url }}){% else %}—{% endif %}
+
+{% endfor %}
+{% else %}
+- 本周无入选事件。
+{% endfor %}

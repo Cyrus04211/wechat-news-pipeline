@@ -1,0 +1,23 @@
+# {{ title }}
+
+> 报告期：{{ period_start }} ~ {{ period_end }} | 生成时间：{{ generated_at }}
+
+---
+
+{% for source, items in articles_by_source.items() %}
+## {{ source }}
+
+{% for a in items %}
+### {{ a.title }}
+
+- **发布时间**：{{ a.published_at }}
+- **摘要**：{{ a.digest or '无摘要，请查阅原文归档' }}
+- **相关主题**：{{ a.industries | join(', ') if a.industries else '未标注' }}
+- **进入本期研报**：{% if a.in_report %}是{% else %}否{% endif %}
+- **原文图片**：{% if a.image_paths %}{{ a.image_paths | length }} 张{% else %}{{ a.images_fetch_status }}{% endif %}
+- **原文**：[链接]({{ a.url }}){% if not a.url %}（无链接）{% endif %}
+
+{% endfor %}
+{% else %}
+本期无归档公众号文章。
+{% endfor %}

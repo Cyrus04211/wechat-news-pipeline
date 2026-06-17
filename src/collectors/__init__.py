@@ -1,0 +1,2 @@
+from src.collectors.news_dedup import DeduplicationEngine, compute_dedup_group_id
+from src.collectors.news_impact import ImpactNewsCollector

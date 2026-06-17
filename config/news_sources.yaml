@@ -1,0 +1,34 @@
+sources:
+  wechat_kouzhaoge:
+    enabled: true
+    name: 口罩哥研报60秒
+    account: 口罩哥研报60秒
+    tier: 3
+    type: wechat_mp
+    fakeid: MzIxNTYyNzQzMg==
+    interval_seconds: 86400
+    rate_limit_seconds: 60
+    timeout_seconds: 30
+    max_retries: 2
+  wechat_hunshui:
+    enabled: true
+    name: 浑水调研
+    account: 浑水调研
+    tier: 3
+    type: wechat_mp
+    fakeid: MzkyNzQ3NjgyNQ==
+    interval_seconds: 86400
+    rate_limit_seconds: 60
+    timeout_seconds: 30
+    max_retries: 2
+  wechat_diaoyan_jiyao:
+    enabled: true
+    name: 调研纪要更新
+    account: 调研纪要更新
+    tier: 3
+    type: wechat_mp
+    interval_seconds: 86400
+    rate_limit_seconds: 60
+    timeout_seconds: 30
+    max_retries: 2
+    fakeid: MzU0MzkwMzQ5NQ==
